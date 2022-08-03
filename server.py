@@ -475,11 +475,11 @@ with middle:
     st.plotly_chart(job_applicant())
     st.markdown(r"""
         <p style='color: white;'>
-        Informasi jumlah kandidat dalam LinkedIn memiliki batas 200, dalam kata lain jika sudah melalui batas tersebut maka kita hanya diberi informasi bahwa pekerjaan tersebut memiliki kandidat lebih dari 200. Demikian, jika kita berasumsi bahwa satu postingan pekerjaan hanya mencari satu kandidat, maka seminimal-minimal nya kita harus menjadi kandidat top 0.5%.<br><br>
+        Informasi jumlah kandidat dalam LinkedIn memiliki batas 200, dalam kata lain jika sudah melalui batas tersebut maka kita hanya diberi informasi bahwa pekerjaan tersebut memiliki kandidat lebih dari 200. Demikian, jika kita berasumsi bahwa satu postingan pekerjaan hanya mencari satu kandidat, maka seminimal-minimalnya kita harus menjadi kandidat top 0.5%.<br><br>
         
-        Tentunya jumlah kandidat yang dicari dalam suatu pekerjaan bergantung dari perusahaan tersebut. Oleh karena itu, tingkat kompetitif dapat sangat bervariasi juga dari jumlah kandidat yang diinginkan oleh perusahaan tersebut.<br><br>
+        Tentunya jumlah kandidat yang dicari dalam suatu pekerjaan tergantung dari perusahaan tersebut. Oleh karena itu, tingkat kompetitif dapat sangat bervariasi juga dari jumlah kandidat yang diinginkan oleh perusahaan tersebut.<br><br>
 
-        Namun, mayoritas pekerjaan hanya memiliki 1-39 kandidat, oleh karena itu tingkat kompetitif mayoritas pekerjaan adalah top 2.5% dari seluruh kandidat. Tentunya dalam mencari pekerjaan diperlukan apply kebeberapa puluh hingga ratusan pekerjaan.
+        Namun, mayoritas pekerjaan hanya memiliki 1-39 kandidat, oleh karena itu tingkat kompetitif mayoritas pekerjaan adalah top 2.5% dari seluruh kandidat. Tentunya dalam mencari pekerjaan diperlukan apply ke beberapa puluh hingga ratusan pekerjaan.
         </p>
     """, unsafe_allow_html=True)
  
@@ -509,7 +509,7 @@ with explanation_1:
     st.markdown("<h3 style='text-align: center; color: white;'>Programming Languages</h3>", unsafe_allow_html=True)
     st.markdown(r"""
         <p style='color: white;'>
-        Pada Pie Chart kita dapat melihat bahwa 61% pekerjaan membutuhkan bahasa pemograman, nilai ini tentunya merupakan batas minimal dikarenakan ada kemungkinan pemograman tersebut merupakan suatu yang sudah terekspektasi. Nilai tersebut hanya dapat menjadi pembanding kepentingan dibanding core-skill lainnya<br><br>
+        Pada Pie Chart kita dapat melihat bahwa 61% pekerjaan membutuhkan bahasa pemrograman, nilai ini tentunya merupakan batas minimal dikarenakan ada kemungkinan pemrograman tersebut merupakan suatu yang sudah terekspektasi. Nilai tersebut hanya dapat menjadi pembanding kepentingan dibanding core-skill lainnya<br><br>
 
         Sedangkan pada Bar Chart kita dapat melihat bahwa Python merupakan bahasa yang paling popular untuk dicari dengan 117 pekerjaan menyebutkannya secara eksplisit. Sedangkan R merupakan alternatif yang cukup bagus dengan 84 pekerjaan menyebutkannya dibanding Scala yang hanya memiliki 11 pekerjaan.<br><br>
 
@@ -556,9 +556,9 @@ with explanation_3:
         <p style='color: white;'>
         Tentunya sebagai Data Analyst melakukan visualisasi merupakan hal yang akan selalu dilakukan. Seperti yang dilihat 55.4% menyebutkan sebuah software visualisasi ataupun kata visualisasi sendiri.<br><br>
 
-        Jika kita melihat terhadap bar chart maka mayoritas perusahaan mencari orang yang dapat tableau dan powerbi. Tidak ada pekerjaan yang menyebutkan library seperti matplotlib, seaborn, plotly, ataupun bokeh. Hal ini dikarenakan library tersebut hanya sebagai alat protoype oleh Data Analyst. Sedangkan pengetahuan Tableau ataupun PowerBI perlu dikuasai untuk kolaborasi ataupun memberikan informasi. <br><br>
+        Jika kita melihat terhadap bar chart maka mayoritas perusahaan mencari orang yang dapat tableau dan powerbi. Tidak ada pekerjaan yang menyebutkan library seperti matplotlib, seaborn, plotly, ataupun bokeh. Hal ini dikarenakan library tersebut hanya sebagai alat prototipe oleh Data Analyst. Sedangkan pengetahuan Tableau ataupun PowerBI perlu dikuasai untuk kolaborasi ataupun memberikan informasi. <br><br>
 
-        Mayoritas pekerjaany yang membutuhkannya hanya perlu menguasai konsep dari software tersebut seperti yang dapat dilihat pada venn diagram. Namun, Tableau tetap memiliki keunggulan dimana terdapat 35 pekerjaan yang hanya menyebut Tableau tanpa menyebutkan PowerBI ataupun redash. 
+        Mayoritas pekerjaan yang membutuhkannya hanya perlu menguasai konsep dari software tersebut seperti yang dapat dilihat pada venn diagram. Namun, Tableau tetap memiliki keunggulan dimana terdapat 35 pekerjaan yang hanya menyebut Tableau tanpa menyebutkan PowerBI ataupun redash. 
         </p>
     """, unsafe_allow_html=True)
 
@@ -579,11 +579,11 @@ with explanation_4:
     st.markdown("<h3 style='text-align: center; color: white;'>Databases</h3>", unsafe_allow_html=True)
     st.markdown(r"""
         <p style='color: white;'>
-        Pengetahuan Database merupakan core-skill yang paling dipentingkan sebagai Data Analyst dengan 73.2% menyebutkannya secara eksplisit. Lebih dari pemograman di 61%.<br><br>
+        Pengetahuan Database merupakan core-skill yang paling dipentingkan sebagai Data Analyst dengan 73.2% menyebutkannya secara eksplisit. Lebih dari pemrograman di 61%.<br><br>
 
         Sedangkan database tersebut SQL-Based database merupakan yang utama, dengan 156 pekerjaan menyebutkannya dibanding NoSQL (MongoDB, NoSQL, Redis) hanya 8. Perlu diperhatikan juga 14 pekerjaan meminta pengetahuan tentang Big Query<br><br>
 
-        Pada Venn Diagram dapat terlihat semua pekerjaan yang mencakup database memperlukan SQL sedangkan yang lainnya hanya menjadi pelengkap.
+        Pada Venn Diagram dapat terlihat semua pekerjaan yang mencakup database memerlukan SQL sedangkan yang lainnya hanya menjadi pelengkap.
         Hal ini menunjukan lagi pentingnya SQL dibanding NoSQL dalam pekerjaan Data Analyst. <br><br>
 
         Sedangkan untuk software SQL sendiri tidak terlalu penting bagi perusahan hanya 3 pekerjaan yang menyebutkan sql jenis lainnya.
@@ -634,7 +634,7 @@ with tab3:
         st.markdown("<h3 style='text-align: center; color: white;'>English</h3>", unsafe_allow_html=True)
         st.markdown(r"""
         <p style='color: white;'>
-        Sedangkan pemahaman bahasa Inggris memiliki persentase kepentingan lebih dari Deployment dengan 27.7% perusahaan menyebutkannya secara langsung. <br><br>Tentunya hal ini sangat wajar dikarenakan ada kemungkinan besar seorang Stake Holder tidak dapat berbicara Bahasa Indonesia. Selain itu juga sebagai Data Analyst akan sangat sering melakukan analisis terhadap teks berbahasa inggris.
+        Sedangkan pemahaman bahasa Inggris memiliki persentase kepentingan lebih dari Deployment dengan 27.7% perusahaan menyebutkannya secara langsung. <br><br>Tentunya hal ini sangat wajar dikarenakan ada kemungkinan besar seorang stake holder tidak dapat berbicara Bahasa Indonesia. Selain itu juga sebagai Data Analyst akan sangat sering melakukan analisis terhadap teks berbahasa inggris.
         </p>
     """, unsafe_allow_html=True)
     with visualization:
@@ -660,7 +660,7 @@ with tab5:
         st.markdown("<h3 style='text-align: center; color: white;'>Git</h3>", unsafe_allow_html=True)
         st.markdown(r"""
         <p style='color: white;'>
-        Secara surprise Git bukan meruapak skill yang menurut perusahaan yang begitu penting hanya 2.82% perusahaan menyebutkannya. <br><br>
+        Secara surprise Git bukan merupakan skill yang menurut perusahaan yang begitu penting hanya 2.82% perusahaan menyebutkannya. <br><br>
         </p>
     """, unsafe_allow_html=True)
     with visualization:
