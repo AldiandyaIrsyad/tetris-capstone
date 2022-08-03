@@ -12,6 +12,7 @@ from venn import venn
 st.set_page_config(layout="wide")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
+
 @st.cache
 def load_dataframe():
     data_analyst = pd.read_csv('./input_2.csv')
