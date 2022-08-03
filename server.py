@@ -12,10 +12,9 @@ from venn import venn
 st.set_page_config(layout="wide")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-
 @st.cache
 def load_dataframe():
-    data_analyst = pd.read_csv('./input_2.csv')
+    data_analyst = pd.read_csv('./input_3.csv')
     return data_analyst 
 data_analyst = load_dataframe()
 
@@ -53,7 +52,7 @@ def job_applicant():
     jobs_applicant_df = pd.DataFrame.from_dict(jobs_applicant, orient='index').reset_index()
     jobs_applicant_df.columns = ['applicant_count', 'count']
     # use plotly bar
-    return px.bar(jobs_applicant_df, x='applicant_count', y='count', width=1200, height=500)
+    return px.bar(jobs_applicant_df, x='applicant_count', y='count', width=800, height=500)
 
 
 def v1_t1():
@@ -269,7 +268,7 @@ def v4_t2():
         'nosql': [1 if a or b or c else 0 for a, b, c in zip(
             data_analyst['mongodb'],
             data_analyst['redis'],
-            data_analyst['bigquery'])
+            data_analyst['nosql'])
         ],
         'big query': [1 if a else 0 for a in data_analyst['bigquery']]
     }
@@ -310,7 +309,9 @@ def v4_t3():
             if sql: database_venn['sql'].add(id)
             if sqlite: database_venn['sql'].add(id)
             if sql_server: database_venn['sql'].add(id)
+
             if bigquery: database_venn['big query'].add(id)
+
             if mongodb: database_venn['nosql'].add(id)
             if redis: database_venn['nosql'].add(id)
             if nosql: database_venn['nosql'].add(id)
@@ -351,7 +352,7 @@ def v4_t4():
 
 
 def v5():
-    other_skills = ['communication', 'deployment', 'english']
+    other_skills = ['communication', 'deployment', 'english', 'excel', 'git']
     require = data_analyst.loc[:, other_skills].sum(axis=0)
 
 
@@ -368,30 +369,48 @@ def v5():
         'not_required': len(data_analyst) - require['english'],
     }
 
+    excel = {
+        'required': require['excel'],
+        'not_required': len(data_analyst) - require['excel'],
+    }
+    git = {
+        'required': require['git'],
+        'not_required': len(data_analyst) - require['git'],
+    }
+
+
+
     communication_df = pd.DataFrame.from_dict(communication, orient='index').reset_index()
     deployment_df = pd.DataFrame.from_dict(deployment, orient='index').reset_index()
     english_df = pd.DataFrame.from_dict(english, orient='index').reset_index()
+    excel_df = pd.DataFrame.from_dict(excel, orient='index').reset_index()
+    git_df = pd.DataFrame.from_dict(git, orient='index').reset_index()
+
 
     communication_df.columns = ['required', 'count']
     deployment_df.columns = ['required', 'count']
     english_df.columns = ['required', 'count']
+    excel_df.columns = ['required', 'count']
+    git_df.columns = ['required', 'count']
     
     # visualize
     return (
         px.pie(communication_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"]),
         px.pie(deployment_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"]),
-        px.pie(english_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"])
+        px.pie(english_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"]),
+        px.pie(excel_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"]),
+        px.pie(git_df, values='count', names='required', color_discrete_sequence=["#EF553B", "#636EFA"]),
     )
 
 @st.cache
 def _how_many_jobs_df():
-    all_skills = ['python', 'r', 'scala', 'spark', 'kafka', 'talend', 'pentaho', 'hive', 'tableau', 'powerbi', 'redash', 'sql', 'nosql', 'bigquery', 'communication', 'deployment', 'english']
+    all_skills = ['python', 'r', 'scala', 'spark', 'kafka', 'talend', 'pentaho', 'hive', 'tableau', 'powerbi', 'redash', 'sql', 'nosql', 'bigquery', 'communication', 'deployment', 'english', 'excel', 'git']
     return data_analyst.loc[:, all_skills]
 
 def how_many_jobs(core_skills, soft_skills):
     jobs = _how_many_jobs_df()
 
-    all_skills = ['python', 'r', 'scala', 'spark', 'kafka', 'talend', 'pentaho', 'hive', 'tableau', 'powerbi', 'redash', 'sql', 'nosql', 'bigquery', 'communication', 'deployment', 'english']
+    all_skills = ['python', 'r', 'scala', 'spark', 'kafka', 'talend', 'pentaho', 'hive', 'tableau', 'powerbi', 'redash', 'sql', 'nosql', 'bigquery', 'communication', 'deployment', 'english', 'excel', 'git']
 
     skills = {k: True if k in core_skills + soft_skills else False for k in all_skills}
 
@@ -434,30 +453,39 @@ st.markdown("<h2 style='text-align: center; color: white;'>Jobs Location</h2>", 
 st.markdown("<p style='text-align: center; color: white;'>Mayoritas pekerjaan berada pada Jakarta atau Jawa Barat.</p>", unsafe_allow_html=True)
 st_folium(load_map(), width=1800)
 
-col_work_type_graph, col_work_type_graph_explanation = st.columns([3, 2])
+_, middle, _ = st.columns([1, 4, 1])
 
-with col_work_type_graph_explanation:
-    st.markdown("<h3 style='text-align: center; color: white;'>Work Type</h3>", unsafe_allow_html=True)
-    st.write(f"""
-        Kita dapat melihat Hybrid dan On-Site mulai menjadi dominan.\n
-        Jika kita asumsi Not-Specified adalah on-site, on-site memiliki {round(34.7 + 36.6, 2)}% dari total jobs.\n
-        Hybrid terdiri dari 21.1% jobs dan Remote terdiri dari 7.51% jobs.
-
-        Oleh karena itu kita dapat asumsi bahwa pekerjaan sudah dominan offline lagi.
-     """)
-
-with col_work_type_graph:
-    st.write(work_type())
-
-st.plotly_chart(job_applicant())
-_, middle, _ = st.columns([1, 3, 1])
 with middle:
+    st.markdown("<h3 style='text-align: center; color: white;'>Work Type</h3>", unsafe_allow_html=True)
+    st.write(work_type())
+    st.markdown(r"""
+        <p style='color: white;'>
+        Pada saat ini mayoritas pekerjaan merupakan On-Site (36.6%) diikuti dengan Hybrid (21.1%) lalu Remote (7.51%).<br>
+        Hal ini menunjukan pentingnya kolaborasi/komunikasi secara fisik dalam pekerjaan Data Analyst, sebagai perbandingan 
+        dalam Software Engineer 15.4% pekerjaan merupakan remote (berdasarkan Linkedin).<br><br>
+
+        Perlu diketahui bahwa jumlah On-Site Data Analyst berkemungkinan jauh lebih tinggi dikarenakan 
+        Not-Specified memiliki kesempatan lebih besar untuk menjadi On-Site dibanding Hybrid ataupun Remote.<br>
+        
+        </p>
+    """, unsafe_allow_html=True)
+
     st.markdown("<h3 style='text-align: center; color: white;'>Applicants Count</h3>", unsafe_allow_html=True)
 
-    with st.expander("See Explanation"):
-        st.markdown("Pekerjaan dalam linkedin memiliki cap 200, dalam kata lain jika sudah lebih dari 200 kita tidak dapat melihat jumlah applicant")
-        st.markdown("Terdapat banyak pekerjaan yang memiliki 200+ applicant hal ini dikarenakan adanya perusahan yang popular")
-        st.markdown(r"Namun mayoritas pekerjaan terdapat pada 1-39 jumlah applicant oleh karena itu perlu menjadi top 2.5% untuk mendapatkan mayoritas pekerjaan")
+    st.plotly_chart(job_applicant())
+    st.markdown(r"""
+        <p style='color: white;'>
+        Informasi jumlah kandidat dalam LinkedIn memiliki batas 200, dalam kata lain jika sudah melalui batas tersebut maka kita hanya diberi informasi bahwa pekerjaan tersebut memiliki kandidat lebih dari 200. Demikian, jika kita berasumsi bahwa satu postingan pekerjaan hanya mencari satu kandidat, maka seminimal-minimal nya kita harus menjadi kandidat top 0.5%.<br><br>
+        
+        Tentunya jumlah kandidat yang dicari dalam suatu pekerjaan bergantung dari perusahaan tersebut. Oleh karena itu, tingkat kompetitif dapat sangat bervariasi juga dari jumlah kandidat yang diinginkan oleh perusahaan tersebut.<br><br>
+
+        Namun, mayoritas pekerjaan hanya memiliki 1-39 kandidat, oleh karena itu tingkat kompetitif mayoritas pekerjaan adalah top 2.5% dari seluruh kandidat. Tentunya dalam mencari pekerjaan diperlukan apply kebeberapa puluh hingga ratusan pekerjaan.
+        </p>
+    """, unsafe_allow_html=True)
+ 
+
+
+    
 
     
 
@@ -479,11 +507,16 @@ with visualization_1:
 
 with explanation_1:
     st.markdown("<h3 style='text-align: center; color: white;'>Programming Languages</h3>", unsafe_allow_html=True)
-    st.markdown("61% Pekerjaan menyebutkan antara 3 bahasa pemograman atau dengan kata \"pemograman\" secara langsung.")
-    st.markdown("Kita dapat melihat 110+ perkejaan menyebutkan Python. Sedangkan R hanya sedikit melewati 80 pekerjaan. Scala yang paling kecil hanya memiliki 11 pekerjaan yang menyebutkannya.")
-    st.markdown("Jika kita liat secara venn diagram, semua pekerjaan menyebutkan python. Kemungkinan hal ini terjadi karena bias dari pemgambilan data. Namun, Python tetap memiliki prioritas dibanding bahasa lainnya.")
-    st.markdown("Sedangkan Scala hanya memiliki 11 mention dimana semua mentionnya menyebutkan Python dan mayoritas menyebutkan R sebagai alternatif")
-    st.markdown("Dalam kata lain sangat disarankan untuk mempelajari Python diantara seluruh bahasa pemograman lainnya. R merupakan alternatif yang masih cukup baik")
+    st.markdown(r"""
+        <p style='color: white;'>
+        Pada Pie Chart kita dapat melihat bahwa 61% pekerjaan membutuhkan bahasa pemograman, nilai ini tentunya merupakan batas minimal dikarenakan ada kemungkinan pemograman tersebut merupakan suatu yang sudah terekspektasi. Nilai tersebut hanya dapat menjadi pembanding kepentingan dibanding core-skill lainnya<br><br>
+
+        Sedangkan pada Bar Chart kita dapat melihat bahwa Python merupakan bahasa yang paling popular untuk dicari dengan 117 pekerjaan menyebutkannya secara eksplisit. Sedangkan R merupakan alternatif yang cukup bagus dengan 84 pekerjaan menyebutkannya dibanding Scala yang hanya memiliki 11 pekerjaan.<br><br>
+
+        Tentunya Python merupakan bahasa terbaik untuk dipelajari yang dapat dilihat pada Venn Diagram R dan Scala hanyalah sebagai alternatif dari Python. Tentunya nilai R ataupun Scala berkemungkinan lebih tinggi, namun dikarenakan bias pada waktu scraping sehingga tidak ada pekerjaan yang membutuhkannya.
+        </p>
+    """, unsafe_allow_html=True)
+
 
 explanation_2, visualization_2 = st.columns([2, 3])
 
@@ -495,10 +528,15 @@ with visualization_2:
         st.plotly_chart(v2_t2())
 
 with explanation_2:
+    
     st.markdown("<h3 style='text-align: center; color: white;'>ETL Softwares</h3>", unsafe_allow_html=True)
-    st.markdown(r"""17.4% Secara explicit menyebutkan sebuah ETL software atau keyword ETL.""")
-    st.markdown("Mayoritas yang menyebutkan ETL hanya menggunakan keywordnya saja tidak softwarenya. Hal ini menunjukan pengalaman ETL meruapakan hal penting namun tidak dipengaruhi software yang digunakan")
-    st.markdown("Tidak ada cukup banyak perbedaan antara software yang digunakan, sehingga software ETL apapun yang dipelajari cukup.")
+    st.markdown(r"""
+        <p style='color: white;'>
+        ETL meskipun tidak sepenting Programming Languages dapat memberikan edge seperti yang dilihat pada Pie Chart yaitu 17.4% pekerjaan menyebutkannya.<br><br>
+
+        Namun, untuk software yang dipergunakan sendiri bukanlah suatu hal yang penting. Seperti yang dilihat pada bar chart. Oleh karena itu tidak penting untuk memilih suatu ETL software yang spesifik, hanya perlu untuk menguasai konsep dari ETL dan pengalaman di software apapun.
+        </p>
+    """, unsafe_allow_html=True)
 
 
 visualization_3, explanation_3 = st.columns([3, 2])
@@ -514,10 +552,16 @@ with visualization_3:
 
 with explanation_3:
     st.markdown("<h3 style='text-align: center; color: white;'>Data Visualizations</h3>", unsafe_allow_html=True)
-    st.markdown(r"""55.4% Menyebutkan skill data visualization. Angka tersebut lebih kecil dari yang diduga, hal ini mungkin dikarenakan hal tersebut merupakan hal yang terekspektasi dari sebuah data analyst, atau kurang pengetahuan istilah data visualisasi pada HR atau Job Poster.""")
-    st.markdown("Selain itu dapat dilihat tableau merupakan alat visualisasi yang paling banyak disebutkan. Lebih daripada istilah visualisasi itu sendiri, oleh karena itu sangat disarankan mempelajari visualisasi ini.")
-    st.markdown("Library visualisasi lainnya tidak disebutkan, hal ini kemungkinan dikarenakan perusahan tidak peduli library yang digunakan untuk prototyping, berbeda dengan tableau atau powerbi yang digunakan untuk kolaborasi dan membagikan hasil juga")
-    st.markdown("Dapat dilihat terdapat 35 pekerjaan yang hanya menyebutkan tableau tanpa menyebutkan powerbi atau redash, oleh karena ini kesempatan terbaik yaitu mempelajari tableau")
+    st.markdown(r"""
+        <p style='color: white;'>
+        Tentunya sebagai Data Analyst melakukan visualisasi merupakan hal yang akan selalu dilakukan. Seperti yang dilihat 55.4% menyebutkan sebuah software visualisasi ataupun kata visualisasi sendiri.<br><br>
+
+        Jika kita melihat terhadap bar chart maka mayoritas perusahaan mencari orang yang dapat tableau dan powerbi. Tidak ada pekerjaan yang menyebutkan library seperti matplotlib, seaborn, plotly, ataupun bokeh. Hal ini dikarenakan library tersebut hanya sebagai alat protoype oleh Data Analyst. Sedangkan pengetahuan Tableau ataupun PowerBI perlu dikuasai untuk kolaborasi ataupun memberikan informasi. <br><br>
+
+        Mayoritas pekerjaany yang membutuhkannya hanya perlu menguasai konsep dari software tersebut seperti yang dapat dilihat pada venn diagram. Namun, Tableau tetap memiliki keunggulan dimana terdapat 35 pekerjaan yang hanya menyebut Tableau tanpa menyebutkan PowerBI ataupun redash. 
+        </p>
+    """, unsafe_allow_html=True)
+
 
 
 explanation_4, visualization_4 = st.columns([2, 3])
@@ -533,10 +577,18 @@ with visualization_4:
         st.plotly_chart(v4_t4())
 with explanation_4:
     st.markdown("<h3 style='text-align: center; color: white;'>Databases</h3>", unsafe_allow_html=True)
-    st.markdown(r"""73.2% Menyebutkan sebuah database, persentase ini merupakan yang tertinggi yang menunjukan pentingnya database.""")
-    st.markdown("Dalam Data Analyst, SQL tetaplah yang menjadi yang paling utama.")
-    st.markdown("Semua perusahaan yang menyebutkan database menyebutkan SQL, sebagian menambahkan big query dan NoSQL dalam deskripsi pekerjaannya")
-    st.markdown("SQL merupakan database yang paling banyak disebut, hal ini memungkinkan dikarenakan perusahan tidak terlalu memperdulikan sql apa yang digunakan, karena mereka memiliki kemiripan yang cukup tinggi")
+    st.markdown(r"""
+        <p style='color: white;'>
+        Pengetahuan Database merupakan core-skill yang paling dipentingkan sebagai Data Analyst dengan 73.2% menyebutkannya secara eksplisit. Lebih dari pemograman di 61%.<br><br>
+
+        Sedangkan database tersebut SQL-Based database merupakan yang utama, dengan 156 pekerjaan menyebutkannya dibanding NoSQL (MongoDB, NoSQL, Redis) hanya 8. Perlu diperhatikan juga 14 pekerjaan meminta pengetahuan tentang Big Query<br><br>
+
+        Pada Venn Diagram dapat terlihat semua pekerjaan yang mencakup database memperlukan SQL sedangkan yang lainnya hanya menjadi pelengkap.
+        Hal ini menunjukan lagi pentingnya SQL dibanding NoSQL dalam pekerjaan Data Analyst. <br><br>
+
+        Sedangkan untuk software SQL sendiri tidak terlalu penting bagi perusahan hanya 3 pekerjaan yang menyebutkan sql jenis lainnya.
+        </p>
+    """, unsafe_allow_html=True)
 
 
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -544,37 +596,75 @@ st.markdown("<h2 style='text-align: center; color: white;'>Other Skills</h2>", u
 
 other_skills = ['data_mining', 'communication', 'deployment', 'data_scraping', 'english']
 
-tab1, tab2, tab3 = st.tabs(["Communications", "Deployments", "English"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Communications", "Deployments", "English", "Excel", "Git"])
 
-communications, deployment, english = v5()
+communications, deployment, english, excel, git = v5()
 
 
 with tab1:
     explanation, visualization = st.columns([2, 3])
     with explanation:
+        
         st.markdown("<h3 style='text-align: center; color: white;'>Communications</h3>", unsafe_allow_html=True)
-        st.markdown("Komunikasi merupakan softskill terpenting, dimana 42.7% pekerjaan menyebutkan secara eksplisit dalam deskripsi pekerjaannya.")
-        st.markdown("Hal ini tentunya wajar, dikarenakan sebuah Data Analyst harus dapat menyampaikan insightnya kepada stake holder.")
+        st.markdown(r"""
+        <p style='color: white;'>
+        Komunikasi merupakan hal yang penting bagi Data Analyst. Dikarenakan mereka harus memberikan insight dan saran action berdasarkan data kepada stake holder. Hal ini dibuktikan dengan adanya 42.7% pekerjaan yang menyebutkannya secara eksplisit. <br><br>
+        </p>
+    """, unsafe_allow_html=True)
     with visualization:
         st.plotly_chart(communications)
 
 with tab2:
     explanation, visualization = st.columns([2, 3])
     with explanation:
+
         st.markdown("<h3 style='text-align: center; color: white;'>Deployments</h3>", unsafe_allow_html=True)
-        st.markdown("Deployment merupakan skill yang sebagian perusahaan cari, dengan 14.6% perusahaan menyebutkannya secara langsung.")
-        st.markdown("Oleh karena itu, deployment merupakan skill yang cukup beneficial untuk membedakan dengan kandidat lainnya.")
+        st.markdown(r"""
+        <p style='color: white;'>
+        Deployment merupakan suatu skill yang merupakan nilai plus, 14.6% perusahan menyebutkannya secara eksplisit. Tentunya hal ini dapat menjadi nilai tambah abi seorang Data Analyst.<br><br>
+        </p>
+    """, unsafe_allow_html=True)
     with visualization:
         st.plotly_chart(deployment)
 
 with tab3:
     explanation, visualization = st.columns([2, 3])
     with explanation:
+        
         st.markdown("<h3 style='text-align: center; color: white;'>English</h3>", unsafe_allow_html=True)
-        st.markdown("27.7% menyebutkan bahasa inggris secara eksplisit. Hal ini tentunya penting sebagai Data Analyst untuk berkomunikasi kepada klien yang tidak dapat berbicara bahasa Indonesia.")
-        st.markdown("Selain itu, sebuah Data Analyst akan selalu berhadapan dengan bahasa inggris dalam data-datanya tentunya skill ini akan terpakai dalam day to day jobsnya.")
+        st.markdown(r"""
+        <p style='color: white;'>
+        Sedangkan pemahaman bahasa Inggris memiliki persentase kepentingan lebih dari Deployment dengan 27.7% perusahaan menyebutkannya secara langsung. <br><br>Tentunya hal ini sangat wajar dikarenakan ada kemungkinan besar seorang Stake Holder tidak dapat berbicara Bahasa Indonesia. Selain itu juga sebagai Data Analyst akan sangat sering melakukan analisis terhadap teks berbahasa inggris.
+        </p>
+    """, unsafe_allow_html=True)
     with visualization:
         st.plotly_chart(english)
+
+with tab4:
+    explanation, visualization = st.columns([2, 3])
+    with explanation:
+        
+        st.markdown("<h3 style='text-align: center; color: white;'>Excel</h3>", unsafe_allow_html=True)
+        st.markdown(r"""
+        <p style='color: white;'>
+        33.8% pekerjaan menyebutkan excel secara eksplisit hal ini menandakan teknologi ini masih sering dipergunakan dalam dunia Data Analyst. <br><br>
+        </p>
+    """, unsafe_allow_html=True)
+    with visualization:
+        st.plotly_chart(excel)
+
+with tab5:
+    explanation, visualization = st.columns([2, 3])
+    with explanation:
+        
+        st.markdown("<h3 style='text-align: center; color: white;'>Git</h3>", unsafe_allow_html=True)
+        st.markdown(r"""
+        <p style='color: white;'>
+        Secara surprise Git bukan meruapak skill yang menurut perusahaan yang begitu penting hanya 2.82% perusahaan menyebutkannya. <br><br>
+        </p>
+    """, unsafe_allow_html=True)
+    with visualization:
+        st.plotly_chart(git)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; color: white;'>My 100% Match Jobs</h2>", unsafe_allow_html=True)
@@ -586,8 +676,8 @@ options_core_skills = st.multiselect(
 )
 
 options_soft_skills  = st.multiselect(
-        'I Have these soft skills',
-        ['communication', 'deployment', 'english'],
+        'I Have these other skills',
+        ['communication', 'deployment', 'english', 'excel', 'git'],
         ['communication']
 )
 
